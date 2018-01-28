@@ -5,17 +5,17 @@ import java.awt.image.*;
 import java.util.Random;
 
 class Frame extends JFrame implements KeyListener {
-    bear b;
-    env e;
+    private Bear bear;
+    private Env env;
 
-    int fps = 0, frames = 0, dx, dy, f = 0;
-    int speed = 0;
+    private int fps = 0, frames = 0, dx, dy, f = 0;
+    private int speed = 0;
     static int Q = 2;
-    long totaltime, currenttime, lasttime;
+    private long totalTime, currentTime, lastTime;
 
-    Canvas canvas;
-    Graphics graphics;
-    Graphics2D g2d;
+    private Canvas canvas;
+    private Graphics graphics;
+    private Graphics2D g2d;
 
     Frame(String nume, int x, int y, int dx, int dy) {
         super(nume);
@@ -39,9 +39,9 @@ class Frame extends JFrame implements KeyListener {
         pack();
         setVisible(true);
 
-        b = new bear();
-        e = new env();
-        wall W = new wall();
+        bear = new Bear();
+        env = new Env();
+        Wall W = new Wall();
         add(W);
 
         render(); // active render
@@ -56,16 +56,15 @@ class Frame extends JFrame implements KeyListener {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         GraphicsConfiguration gc = gd.getDefaultConfiguration();
 
-        //Imaginea pe care o construim
         BufferedImage bi = gc.createCompatibleImage(dx, dy);
         Random rand = new Random();
-        currenttime = System.currentTimeMillis();
+        currentTime = System.currentTimeMillis();
 
         while (true) {
             try {
                 fps();
 
-                // clear back buffer...
+                // clear back buffer
                 try {
                     Thread.sleep(Q);
                 } catch (Exception ex) {
@@ -78,31 +77,31 @@ class Frame extends JFrame implements KeyListener {
                 c = rand.nextInt(200);
                 w = rand.nextInt(300);
 
-                e.paint(g2d, f, c, w, speed, b.y);
-                b.paint(g2d);
+                env.paint(g2d, f, c, w, speed, bear.y);
+                bear.paint(g2d);
 
                 f += speed;
                 if (speed == 1) f -= y;
                 y = 1 - y;
 
-                // display frames per second...
+                // display frames per second
                 g2d.setFont(new Font("Courier New", Font.PLAIN, 12));
                 g2d.setColor(Color.GREEN);
                 g2d.drawString(String.format("FPS: %s", fps), 20, 20);
 
-                //display score
+                // display score
                 g2d.setFont(new Font("Elephant", Font.BOLD, 20));
                 g2d.setColor(Color.ORANGE);
-                g2d.drawString(String.format("Score: %s", e.score), 630, 40);
+                g2d.drawString(String.format("Score: %s", env.score), 630, 40);
 
-                // Blit image and flip...
+                // draw image and flip
                 graphics = buffer.getDrawGraphics();
                 graphics.drawImage(bi, 0, 0, null);
 
                 if (!buffer.contentsLost())
                     buffer.show();
 
-                // Let the OS have a little time...
+                // let the OS have a little time
                 Thread.yield();
 
             } finally {
@@ -118,11 +117,11 @@ class Frame extends JFrame implements KeyListener {
     }
 
     private void fps() {
-        lasttime = currenttime;
-        currenttime = System.currentTimeMillis();
-        totaltime += currenttime - lasttime;
-        if (totaltime > 1000) {
-            totaltime -= 1000;
+        lastTime = currentTime;
+        currentTime = System.currentTimeMillis();
+        totalTime += currentTime - lastTime;
+        if (totalTime > 1000) {
+            totalTime -= 1000;
             fps = frames;
             frames = 0;
         }
@@ -133,16 +132,16 @@ class Frame extends JFrame implements KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_RIGHT:
                 speed = 1;
-                b.sw = 1;
-                b.vx = 2;
+                bear.sw = 1;
+                bear.vx = 2;
                 break;
             case KeyEvent.VK_LEFT:
                 break;
             case KeyEvent.VK_UP:
-                b.vy = -1;
+                bear.vy = -1;
                 break;
             case KeyEvent.VK_DOWN:
-                b.vy = 3;
+                bear.vy = 3;
                 break;
             case KeyEvent.VK_ESCAPE:
 
@@ -152,11 +151,11 @@ class Frame extends JFrame implements KeyListener {
 
     public void keyReleased(KeyEvent e) {
         int o = e.getKeyCode();
-        if (o == KeyEvent.VK_UP) b.vy = 3;
+        if (o == KeyEvent.VK_UP) bear.vy = 3;
         else if (o == KeyEvent.VK_RIGHT || o == KeyEvent.VK_LEFT) {
-            b.vx = 0;
+            bear.vx = 0;
             speed = 0;
-            b.sw = 0;
+            bear.sw = 0;
         }
     }
 

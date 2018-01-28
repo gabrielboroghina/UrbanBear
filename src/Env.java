@@ -3,21 +3,22 @@ import javax.swing.*;
 
 import java.util.*;
 
-class env {
-    Image bg, coin, wall;
-    int score, p, xw, yw, q;
-    boolean sw = false, sw1 = false;
+class Env {
+    private Image bg, coin, wall;
+    int score;
+    private int p, xw, yw, q;
+    private boolean sw = false, sw1 = false;
 
-    public env() {
+    public Env() {
         bg = new ImageIcon("res/bg1.jpg").getImage();
         coin = new ImageIcon("res/coin.png").getImage();
-        wall = new ImageIcon("res/wall.png").getImage();
+        wall = new ImageIcon("res/Wall.png").getImage();
     }
 
     public void paint(Graphics2D g2d, int f, int c, int w, int speed, int y) {
         g2d.drawImage(bg, -f, 0, null);
 
-        //coin
+        // coin
         if (c == 1 && !sw) {
             sw = true;
             p = 750;
@@ -32,7 +33,7 @@ class env {
         }
         if (sw && p == 1) sw = false;
 
-        //wall
+        // wall
         if (w == 1 && !sw1) {
             sw1 = true;
             xw = 750;
